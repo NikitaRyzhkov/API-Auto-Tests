@@ -10,59 +10,65 @@ import java.io.File;
 import static io.restassured.RestAssured.*;
 
 
-
-
 public class TaskTests {
 
-    String token = "688588768dbc9273d8c6cda915b2beb3fb6263b2";
-    RequestSpecification taskSpec = given().header("Authorization","Bearer "+token).baseUri("https://api.todoist.com/rest/v2/tasks");
-    String taskBodyPath = "src/test/java/task_instanse.json";
-    String updatedTaskBodyPath = "src/test/java/newtask_instanse.json";
-    File taskBody = new File(taskBodyPath);
+    // Test data
+    Creator creator = new Creator();
+    String taskID = creator.getTaskID();
+    String updatedTaskBodyPath = "src/test/java/newtask_instance.json";
     File updatedTaskBody = new File(updatedTaskBodyPath);
-
-
-
-
+    // Test specification
+    RequestSpecification tasksSpec = given().
+            header("Authorization", "Bearer " + Endpoints.token).
+            baseUri(Endpoints.baseUri);
+    RequestSpecification singleTaskSpec = given().
+            pathParam("id", taskID).
+            header("Authorization", "Bearer " + Endpoints.token).
+            baseUri(Endpoints.baseUri);
 
 
     @Test
     public void postCreateTask() throws Exception {
 
-        taskSpec.given().body(taskBody).contentType(ContentType.JSON).
-                when().post().then().log().body().statusCode(200);
+        tasksSpec.given().body(creator.taskBody).contentType(ContentType.JSON).
+                when().post(Endpoints.tasks).then().log().body().statusCode(200);
     }
+
     @Test
     public void getTask() throws Exception {
 
-        taskSpec.when().get("/7262900498").then().log().body().statusCode(200);
+        singleTaskSpec.given().when().get(Endpoints.singleTask).then().log().body().statusCode(200);
 
     }
+
     @Test
     public void getAllTasks() throws Exception {
 
-        taskSpec.when().get().then().log().body().statusCode(200);
+        tasksSpec.when().get(Endpoints.tasks).then().log().body().statusCode(200);
     }
+
     @Test
     public void postUpdateTask() throws Exception {
 
-        taskSpec.given().contentType(ContentType.JSON).body(updatedTaskBody).when().post("/7262900498").then().log().body().statusCode(200);
+        singleTaskSpec.given().contentType(ContentType.JSON).body(updatedTaskBody).when().post(Endpoints.singleTask).then().log().body().statusCode(200);
     }
+
     @Test
     public void postCloseTask() throws Exception {
 
-        taskSpec.when().post("/7262900498/close").then().log().body().statusCode(204);
+        singleTaskSpec.given().when().post(Endpoints.closeTask).then().log().body().statusCode(204);
     }
+
     @Test
     public void postReopenTask() throws Exception {
 
-        taskSpec.when().post("/7262900498/reopen").then().log().body().statusCode(204);
+        singleTaskSpec.given().when().post(Endpoints.reopenTask).then().log().body().statusCode(204);
     }
+
     @Test
     public void deleteTask() throws Exception {
-        taskSpec.when().delete("/7262900498").then().log().body().statusCode(204);
+        String taskToDelete = creator.getTaskID();
+        tasksSpec.given().pathParam("id", taskToDelete).when().delete(Endpoints.singleTask).then().log().body().statusCode(204);
     }
 
 }
-// вытащить айдишник задачи и провести с ним дальнейшие тесты
-// без этого это не автотесты, а херь
