@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.builder.RequestSpecBuilder;
 
 import org.testng.annotations.Test;
 
@@ -18,11 +19,11 @@ public class TaskTests {
     String updatedTaskBodyPath = "src/test/java/newtask_instance.json";
     File updatedTaskBody = new File(updatedTaskBodyPath);
     // Test specification
-    RequestSpecification tasksSpec = given().
-            header("Authorization", "Bearer " + Endpoints.token).
-            baseUri(Endpoints.baseUri);
     RequestSpecification singleTaskSpec = given().
             pathParam("id", taskID).
+            header("Authorization", "Bearer " + Endpoints.token).
+            baseUri(Endpoints.baseUri);
+    RequestSpecification tasksSpec = given().
             header("Authorization", "Bearer " + Endpoints.token).
             baseUri(Endpoints.baseUri);
 
@@ -37,7 +38,7 @@ public class TaskTests {
     @Test
     public void getTask() throws Exception {
 
-        singleTaskSpec.given().when().get(Endpoints.singleTask).then().log().body().statusCode(200);
+        singleTaskSpec.when().get(Endpoints.singleTask).then().log().body().statusCode(200);
 
     }
 
@@ -45,6 +46,15 @@ public class TaskTests {
     public void getAllTasks() throws Exception {
 
         tasksSpec.when().get(Endpoints.tasks).then().log().body().statusCode(200);
+    }
+    @Test
+    public void getAllTasks1() throws Exception {
+
+       given().
+               header("Authorization", "Bearer " + Endpoints.token).
+               baseUri(Endpoints.baseUri).
+               when().get(Endpoints.tasks).
+               then().log().body().statusCode(200);
     }
 
     @Test
@@ -56,13 +66,13 @@ public class TaskTests {
     @Test
     public void postCloseTask() throws Exception {
 
-        singleTaskSpec.given().when().post(Endpoints.closeTask).then().log().body().statusCode(204);
+        singleTaskSpec.when().post(Endpoints.closeTask).then().log().body().statusCode(204);
     }
 
     @Test
     public void postReopenTask() throws Exception {
 
-        singleTaskSpec.given().when().post(Endpoints.reopenTask).then().log().body().statusCode(204);
+        singleTaskSpec.when().post(Endpoints.reopenTask).then().log().body().statusCode(204);
     }
 
     @Test
