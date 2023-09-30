@@ -13,7 +13,8 @@ import static io.restassured.RestAssured.*;
 
 public class TaskTests {
 
-
+// Два объекта, чтобы предотвратить применение не того спека
+    Specification spec1 = new Specification();
     Specification spec = new Specification();
 
 
@@ -33,15 +34,6 @@ public class TaskTests {
     }
 
     @Test
-    public void getTask() throws Exception {
-
-        spec.singleTaskSpec.when()
-                .get(Endpoints.singleTask)
-                .then().log().body().statusCode(200);
-
-    }
-
-    @Test
     public void getAllTasks() throws Exception {
 
         spec.tasksSpec.when()
@@ -50,19 +42,17 @@ public class TaskTests {
     }
 
     @Test
-    public void getAllTasks1() throws Exception {
+    public void getTask() throws Exception {
 
-        given().
-                header("Authorization", "Bearer " + Endpoints.token).
-                baseUri(Endpoints.baseUri).
-                when().get(Endpoints.tasks).
-                then().log().body().statusCode(200);
+        spec1.singleTaskSpec.when()
+                .get(Endpoints.singleTask)
+                .then().log().body().statusCode(200);
+
     }
-
     @Test
     public void postUpdateTask() throws Exception {
 
-        spec.singleTaskSpec.given()
+        spec1.singleTaskSpec.given()
                 .contentType(ContentType.JSON).body(updatedTaskBody)
                 .when().post(Endpoints.singleTask)
                 .then().log().body().statusCode(200);
@@ -71,7 +61,7 @@ public class TaskTests {
     @Test
     public void postCloseTask() throws Exception {
 
-        spec.singleTaskSpec.when()
+        spec1.singleTaskSpec.when()
                 .post(Endpoints.closeTask)
                 .then().log().body().statusCode(204);
     }
@@ -79,7 +69,7 @@ public class TaskTests {
     @Test
     public void postReopenTask() throws Exception {
 
-        spec.singleTaskSpec.when()
+        spec1.singleTaskSpec.when()
                 .post(Endpoints.reopenTask)
                 .then().log().body().statusCode(204);
     }
@@ -87,7 +77,7 @@ public class TaskTests {
     @Test
     public void deleteTask() throws Exception {
         String taskToDelete = creator.getTaskID();
-        spec.tasksSpec.given()
+        spec1.tasksSpec.given()
                 .pathParam("id", taskToDelete)
                 .when().delete(Endpoints.singleTask)
                 .then().log().body().statusCode(204);
