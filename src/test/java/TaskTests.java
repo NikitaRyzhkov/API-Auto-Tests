@@ -25,7 +25,7 @@ public class TaskTests {
 
 
     @Test
-    public void postCreateTask() throws Exception {
+    public void CreateTask() throws Exception {
 
         spec.tasksSpec.given()
                 .body(creator.taskBody).contentType(ContentType.JSON)
@@ -50,7 +50,7 @@ public class TaskTests {
 
     }
     @Test
-    public void postUpdateTask() throws Exception {
+    public void UpdateTask() throws Exception {
 
         spec1.singleTaskSpec.given()
                 .contentType(ContentType.JSON).body(updatedTaskBody)
@@ -59,7 +59,7 @@ public class TaskTests {
     }
 
     @Test
-    public void postCloseTask() throws Exception {
+    public void CloseTask() throws Exception {
 
         spec1.singleTaskSpec.when()
                 .post(Endpoints.closeTask)
@@ -67,7 +67,7 @@ public class TaskTests {
     }
 
     @Test
-    public void postReopenTask() throws Exception {
+    public void ReopenTask() throws Exception {
 
         spec1.singleTaskSpec.when()
                 .post(Endpoints.reopenTask)
