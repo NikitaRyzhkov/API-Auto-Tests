@@ -3,6 +3,7 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
+import static org.hamcrest.Matchers.*;
 
 public class NegativeTaskTests {
 
@@ -16,37 +17,52 @@ public class NegativeTaskTests {
 
         spec1.singleTaskSpec.given()
                 .when().post(Endpoints.singleTask)
-                .then().log().body().log().status();
+                .then()
+                .statusCode(400)
+                .assertThat().body(equalTo("At least one of supported fields should be set and non-empty"));
+
     }
+
     @Test //Пустое тело запроса
     public void CreateTaskWithoutBody() throws Exception {
 
         spec.tasksSpec.given()
                 .when().post(Endpoints.tasks)
-                .then().log().body().log().status();
+                .then()
+                .statusCode(400)
+                .assertThat().body(equalTo("Required argument is missing"));
     }
+
     @Test // Невалидный id
     public void getTaskNotValidID() throws Exception {
 
         spec.tasksSpec.
                 when().
-                get(Endpoints.tasks+wrongID)
-                .then().log().body().log().status();
+                get(Endpoints.tasks + wrongID)
+                .then()
+                .statusCode(404)
+                .assertThat().body(equalTo("Task not found"));
 
     }
+
     @Test // Пустой токен
     public void getAllTasksEmptyToken() throws Exception {
 
-        given().header("Authorization","").when()
-                .get(Endpoints.baseUri+Endpoints.tasks)
-                .then().log().body().log().status();
+        given().header("Authorization", "").when()
+                .get(Endpoints.baseUri + Endpoints.tasks)
+                .then()
+                .statusCode(401)
+                .assertThat().body(equalTo("Forbidden"));
+
     }
+
     @Test // Невалидный токен
     public void getAllTasksNotValidToken() throws Exception {
 
-        given().header("Authorization",wrongToken).when()
-                .get(Endpoints.baseUri+Endpoints.tasks)
-                .then().log().body().log().status();
+        given().header("Authorization", wrongToken).when()
+                .get(Endpoints.baseUri + Endpoints.tasks)
+                .then().statusCode(403)
+                .assertThat().body(containsString("Sorry, you are forbidden to access this"));
     }
 
 

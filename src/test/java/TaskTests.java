@@ -10,11 +10,9 @@ import java.io.File;
 
 import static io.restassured.RestAssured.*;
 
-
+// С помощью testng.xml запускать гет запросы и остальные в отдельных тестах
 public class TaskTests {
 
-// Два объекта, чтобы предотвратить применение не того спека
-    Specification spec1 = new Specification();
     Specification spec = new Specification();
 
 
@@ -33,7 +31,7 @@ public class TaskTests {
                 .then().log().body().statusCode(200);
     }
 
-    @Test
+    @Test (groups = {"get.requests"})
     public void getAllTasks() throws Exception {
 
         spec.tasksSpec.when()
@@ -41,10 +39,10 @@ public class TaskTests {
                 .then().log().body().statusCode(200);
     }
 
-    @Test
+    @Test (groups = {"get.requests"})
     public void getTask() throws Exception {
 
-        spec1.singleTaskSpec.when()
+        spec.singleTaskSpec.when()
                 .get(Endpoints.singleTask)
                 .then().log().body().statusCode(200);
 
@@ -52,7 +50,7 @@ public class TaskTests {
     @Test
     public void UpdateTask() throws Exception {
 
-        spec1.singleTaskSpec.given()
+        spec.singleTaskSpec.given()
                 .contentType(ContentType.JSON).body(updatedTaskBody)
                 .when().post(Endpoints.singleTask)
                 .then().log().body().statusCode(200);
@@ -61,7 +59,7 @@ public class TaskTests {
     @Test
     public void CloseTask() throws Exception {
 
-        spec1.singleTaskSpec.when()
+        spec.singleTaskSpec.when()
                 .post(Endpoints.closeTask)
                 .then().log().body().statusCode(204);
     }
@@ -69,7 +67,7 @@ public class TaskTests {
     @Test
     public void ReopenTask() throws Exception {
 
-        spec1.singleTaskSpec.when()
+        spec.singleTaskSpec.when()
                 .post(Endpoints.reopenTask)
                 .then().log().body().statusCode(204);
     }
@@ -77,10 +75,14 @@ public class TaskTests {
     @Test
     public void deleteTask() throws Exception {
         String taskToDelete = creator.getTaskID();
-        spec1.tasksSpec.given()
+        spec.tasksSpec.given()
                 .pathParam("id", taskToDelete)
                 .when().delete(Endpoints.singleTask)
                 .then().log().body().statusCode(204);
     }
 
 }
+// TODO: составить изолированные тесты из "логирующих"
+
+// TODO: уйти от изоляции гет запросов для позитивных тестов
+// Возможное решение: вынос в отдельный класс всю информацию о запросе, т. н. Сервис
