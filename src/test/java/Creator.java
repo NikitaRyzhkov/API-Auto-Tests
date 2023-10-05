@@ -17,10 +17,9 @@ public class Creator {
 
     public String getTaskID() {
 
-
         Response response = taskSpec.given()
-                    .body(taskBody).contentType(ContentType.JSON).
-                when()
+                    .body(taskBody).contentType(ContentType.JSON)
+                .when()
                     .post(Endpoints.tasks)
                 .then()
                     .extract().response();

@@ -22,6 +22,7 @@ public class TaskTests {
     File updatedTaskBody = new File(updatedTaskBodyPath);
 
 
+
     @Test
     public void CreateTask() throws Exception {
 
@@ -83,6 +84,7 @@ public class TaskTests {
 
 }
 // TODO: составить изолированные тесты из "логирующих"
-
 // TODO: уйти от изоляции гет запросов для позитивных тестов
 // Возможное решение: вынос в отдельный класс всю информацию о запросе, т. н. Сервис
+// TODO: применить static, например, в методах Creator, Specification
+// TODO: использовать pojo для тела запроса и для проверки тела ответа
