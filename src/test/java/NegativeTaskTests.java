@@ -7,15 +7,15 @@ import static org.hamcrest.Matchers.*;
 
 public class NegativeTaskTests {
 
-    Specification spec1 = new Specification();
     Specification spec = new Specification();
     String wrongID = "/101";
     String wrongToken = "688588768dbc9273d8c6cda915b2beb3fb6263b9";
+    TaskReqBody reqUnnamedBody = new TaskReqBody("","at 12:00","en",2);
 
     @Test //Пустое тело запроса
     public void UpdateTaskWithoutBody() throws Exception {
 
-        spec1.singleTaskSpec.given()
+        spec.singleTaskSpec.given()
                 .when().post(Endpoints.singleTask)
                 .then()
                 .statusCode(400)
@@ -63,6 +63,15 @@ public class NegativeTaskTests {
                 .get(Endpoints.baseUri + Endpoints.tasks)
                 .then().statusCode(403)
                 .assertThat().body(containsString("Sorry, you are forbidden to access this"));
+    }
+
+    @Test // Тело запроса с незаполненным полем "name"
+    public void createUnnamedTask() throws  Exception {
+        spec.tasksSpec.given()
+                .body(reqUnnamedBody).contentType(ContentType.JSON)
+                .when().post(Endpoints.tasks)
+                .then().statusCode(400).assertThat().body(containsString("Invalid argument value"));
+
     }
 
 

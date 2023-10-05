@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Основные позитивные тесты">
-    <test name="GET запросы">
+    <test name="GET запросы" allow-return-values="true">
 
 
         <groups>
@@ -15,7 +15,7 @@
 
 
     </test>
-    <test name="POST, DELETE запросы">
+    <test name="POST, DELETE запросы" allow-return-values="true">
         <groups>
             <run>
                 <exclude name="get.requests"/>

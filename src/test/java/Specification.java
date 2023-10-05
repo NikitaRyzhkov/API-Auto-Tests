@@ -18,3 +18,4 @@ public class Specification {
             .baseUri(Endpoints.baseUri);
 
 }
+// TODO: применить static, например, в методах Creator, Specification
