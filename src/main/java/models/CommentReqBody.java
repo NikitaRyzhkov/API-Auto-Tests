@@ -1,4 +1,4 @@
-package comments;
+package models;
 
 import lombok.Getter;
 

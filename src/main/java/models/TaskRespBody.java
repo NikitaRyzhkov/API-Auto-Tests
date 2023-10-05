@@ -1,4 +1,4 @@
-package tasks;
+package models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

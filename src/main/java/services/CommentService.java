@@ -1,8 +1,8 @@
-package comments;
-import general.Specification;
-import general.Endpoints;
+package services;
+
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import models.CommentReqBody;
 
 import static io.restassured.RestAssured.given;
 
@@ -10,42 +10,42 @@ public class CommentService {
 
     public Response getAllComments(String taskID) {
         return given().
-                spec(Specification.taskSpec)
+                spec(Specification.SPECIFICATION)
                 .pathParam("id",taskID)
                 .when()
-                .get(Endpoints.comments);
+                .get(Endpoints.COMMENTS);
     }
     public Response createComment (CommentReqBody reqBody) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .contentType(ContentType.JSON)
                 .body(reqBody)
                 .when()
-                .post(Endpoints.singleComment);
+                .post(Endpoints.SINGLE_COMMENT);
 
     }
     public Response getComment (String commentID) {
         return  given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id",commentID)
                 .when()
-                .get(Endpoints.particularComment);
+                .get(Endpoints.PARTICULAR_COMMENT);
     }
     public Response updateComment (String commentID, CommentReqBody reqBody) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id",commentID)
                 .contentType(ContentType.JSON)
                 .body(reqBody)
                 .when()
-                .post(Endpoints.particularComment);
+                .post(Endpoints.PARTICULAR_COMMENT);
     }
     public Response deleteComment (String commentID) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id",commentID)
                 .when()
-                .delete(Endpoints.particularComment);
+                .delete(Endpoints.PARTICULAR_COMMENT);
     }
 
 

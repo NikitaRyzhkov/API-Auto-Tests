@@ -1,57 +1,57 @@
-package tasks;
+package services;
 
-import general.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import models.TaskReqBody;
 import static io.restassured.RestAssured.given;
 
 public class TaskService {
 
     public Response deleteTask(String id) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id", id)
-                .delete(Endpoints.singleTask);
+                .delete(Endpoints.SINGLE_TASK);
     }
     public Response createTask(TaskReqBody taskReqBody) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .body(taskReqBody).contentType(ContentType.JSON)
                 .when()
-                .post(Endpoints.tasks);
+                .post(Endpoints.TASKS);
     }
     public Response updateTask(String id, TaskReqBody taskReqBody) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id", id)
                 .body(taskReqBody).contentType(ContentType.JSON)
-                .when().post(Endpoints.singleTask);
+                .when().post(Endpoints.SINGLE_TASK);
     }
 
     public Response closeTask(String id) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id", id)
-                .post(Endpoints.closeTask);
+                .post(Endpoints.CLOSE_TASK);
     }
     public Response reopenTask(String id) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id", id)
                 .when()
-                .post(Endpoints.reopenTask);
+                .post(Endpoints.REOPEN_TASK);
     }
     public Response getTask(String id) {
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .pathParam("id", id)
-                .get(Endpoints.singleTask);
+                .get(Endpoints.SINGLE_TASK);
     }
     public Response getAllTasks(){
         return given()
-                .spec(Specification.taskSpec)
+                .spec(Specification.SPECIFICATION)
                 .when()
-                .get(Endpoints.tasks);
+                .get(Endpoints.TASKS);
     }
 }
 

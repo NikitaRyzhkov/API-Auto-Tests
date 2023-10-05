@@ -1,12 +1,15 @@
 package comments;
 
+import helpers.CommentHelper;
 import io.restassured.http.ContentType;
-import org.checkerframework.checker.units.qual.C;
+import models.CommentReqBody;
+import models.CommentRespBody;
+import models.TaskRespBody;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
-import tasks.TaskHelper;
+import services.CommentService;
+import helpers.TaskHelper;
 import org.testng.annotations.Test;
-import tasks.TaskRespBody;
 
 import java.util.List;
 
@@ -28,6 +31,8 @@ public class MainCommentPositiveTests {
         softAssert.assertEquals(respBody.getContent(), reqBody.getContent());
         softAssert.assertEquals(reqBody.getTask_id(), reqBody.getTask_id());
         softAssert.assertAll();
+
+        commentService.deleteComment(respBody.getId());
 
     }
 
@@ -78,8 +83,6 @@ public class MainCommentPositiveTests {
 
     }
 
-    // Цикл работает при запуске отдельного теста. При запуске класса - нет.
-    // TODO отладить
     @Test
     public void getAllCommentsTest() {
 
@@ -96,6 +99,7 @@ public class MainCommentPositiveTests {
             softAssert.assertEquals(body.getId(), respBody.getId());
             softAssert.assertAll();
         }
+
     }
 
 }

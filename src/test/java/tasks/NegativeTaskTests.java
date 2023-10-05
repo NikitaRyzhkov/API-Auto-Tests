@@ -1,7 +1,10 @@
 package tasks;
 
+import helpers.TaskHelper;
+import models.TaskReqBody;
 import org.testng.annotations.Test;
-import general.*;
+import services.Endpoints;
+import services.TaskService;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
@@ -56,7 +59,7 @@ public class NegativeTaskTests {
         given()
                 .header("Authorization", "")
                 .when()
-                .get(Endpoints.baseUri + Endpoints.tasks)
+                .get(Endpoints.BASE_URI + Endpoints.TASKS)
                 .then()
                 .statusCode(401)
                 .assertThat().body(equalTo("Forbidden"));
@@ -72,7 +75,7 @@ public class NegativeTaskTests {
         given()
                 .header("Authorization", wrongToken)
                 .when()
-                .get(Endpoints.baseUri + Endpoints.tasks)
+                .get(Endpoints.BASE_URI + Endpoints.TASKS)
                 .then()
                 .statusCode(403)
                 .assertThat().body(containsString("Sorry, you are forbidden to access this"));

@@ -1,6 +1,8 @@
-package comments;
+package helpers;
 
-import tasks.TaskHelper;
+import models.CommentReqBody;
+import models.CommentRespBody;
+import services.CommentService;
 
 public class CommentHelper {
 
