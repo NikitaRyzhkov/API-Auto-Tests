@@ -6,16 +6,9 @@ import static io.restassured.RestAssured.given;
 
 public class Specification {
 
-    Creator creator = new Creator();
-    String taskID = creator.getTaskID();
-
-    public  final RequestSpecification singleTaskSpec = given()
-            .pathParam("id", taskID)
-            .header("Authorization", "Bearer " + Endpoints.token)
-            .baseUri(Endpoints.baseUri);
-    public  final RequestSpecification tasksSpec = given()
-            .header("Authorization", "Bearer " + Endpoints.token)
-            .baseUri(Endpoints.baseUri);
+    public static final RequestSpecification taskSpec = new RequestSpecBuilder()
+            .setBaseUri(Endpoints.baseUri)
+            .addHeader("Authorization", "Bearer " + Endpoints.token)
+            .build();
 
 }
-// TODO: применить static, например, в методах Creator, Specification

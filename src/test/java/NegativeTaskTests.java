@@ -7,70 +7,87 @@ import static org.hamcrest.Matchers.*;
 
 public class NegativeTaskTests {
 
-    Specification spec = new Specification();
     String wrongID = "/101";
     String wrongToken = "688588768dbc9273d8c6cda915b2beb3fb6263b9";
-    TaskReqBody reqUnnamedBody = new TaskReqBody("","at 12:00","en",2);
+    TaskReqBody reqUnnamedBody = new TaskReqBody("", "at 12:00", "en", 2);
 
-    @Test //Пустое тело запроса
+    //Пустое тело запроса
+    @Test
     public void UpdateTaskWithoutBody() throws Exception {
 
-        spec.singleTaskSpec.given()
+        //Specification.tasksSpec
+                given().spec(Specification.taskSpec)
+                .pathParam("id", Creator.getTaskID())
                 .when().post(Endpoints.singleTask)
                 .then()
                 .statusCode(400)
                 .assertThat().body(equalTo("At least one of supported fields should be set and non-empty"));
 
     }
-
-    @Test //Пустое тело запроса
+    //Пустое тело запроса
+    @Test
     public void CreateTaskWithoutBody() throws Exception {
 
-        spec.tasksSpec.given()
+       // Specification.tasksSpec.
+                given().spec(Specification.taskSpec)
                 .when().post(Endpoints.tasks)
                 .then()
                 .statusCode(400)
                 .assertThat().body(equalTo("Required argument is missing"));
     }
 
-    @Test // Невалидный id
+    // Невалидный id
+    @Test
     public void getTaskNotValidID() throws Exception {
 
-        spec.tasksSpec.
-                when().
-                get(Endpoints.tasks + wrongID)
+//        Specification.tasksSpec.
+                given().spec(Specification.taskSpec)
+                .when()
+                .get(Endpoints.tasks + wrongID)
                 .then()
                 .statusCode(404)
                 .assertThat().body(equalTo("Task not found"));
 
     }
 
-    @Test // Пустой токен
+    // Пустой токен
+    @Test
     public void getAllTasksEmptyToken() throws Exception {
 
-        given().header("Authorization", "").when()
-                .get(Endpoints.baseUri + Endpoints.tasks)
+                given()
+                    .header("Authorization", "")
+                .when()
+                    .get(Endpoints.baseUri + Endpoints.tasks)
                 .then()
-                .statusCode(401)
-                .assertThat().body(equalTo("Forbidden"));
+                    .statusCode(401)
+                    .assertThat().body(equalTo("Forbidden"));
 
     }
 
-    @Test // Невалидный токен
+    // Невалидный токен
+    @Test
     public void getAllTasksNotValidToken() throws Exception {
 
-        given().header("Authorization", wrongToken).when()
-                .get(Endpoints.baseUri + Endpoints.tasks)
-                .then().statusCode(403)
-                .assertThat().body(containsString("Sorry, you are forbidden to access this"));
+                given()
+                    .header("Authorization", wrongToken)
+                .when()
+                    .get(Endpoints.baseUri + Endpoints.tasks)
+                .then()
+                    .statusCode(403)
+                    .assertThat().body(containsString("Sorry, you are forbidden to access this"));
     }
 
-    @Test // Тело запроса с незаполненным полем "name"
-    public void createUnnamedTask() throws  Exception {
-        spec.tasksSpec.given()
-                .body(reqUnnamedBody).contentType(ContentType.JSON)
-                .when().post(Endpoints.tasks)
-                .then().statusCode(400).assertThat().body(containsString("Invalid argument value"));
+    // Тело запроса с незаполненным полем "name"
+    @Test
+    public void createUnnamedTask() throws Exception {
+       // Specification.tasksSpec
+                given()
+                        .spec(Specification.taskSpec)
+                        .body(reqUnnamedBody).contentType(ContentType.JSON)
+                .when()
+                        .post(Endpoints.tasks)
+                .then()
+                        .statusCode(400).assertThat().body(containsString("Invalid argument value"));
 
     }
 

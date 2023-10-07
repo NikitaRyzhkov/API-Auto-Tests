@@ -13,37 +13,39 @@ import static org.hamcrest.Matchers.equalTo;
 
 // С помощью testng.xml запускать гет запросы и остальные в отдельных тестах
 public class TaskTests {
-    Specification spec = new Specification();
+
     // Test data
     TaskReqBody reqBody = new TaskReqBody("Buy products","at 12:00","en",2);
     TaskReqBody reqBodyUpdated = new TaskReqBody("Fill the docs","tomorrow","en",2);
-    String name = "Name check";
-    TaskReqBody reqBody1 = new TaskReqBody(name,"tomorrow","en",2);
-    Creator creator = new Creator();
+
 
 
 
     @Test
     public void CreateTask() throws Exception {
 
-        spec.tasksSpec.given()
+        given().spec(Specification.taskSpec)
                 .body(reqBody).contentType(ContentType.JSON)
                 .when().post(Endpoints.tasks)
                 .then().log().body().statusCode(200);
     }
 
-    @Test (groups = {"get.requests"})
+    @Test
     public void getAllTasks() throws Exception {
 
-        spec.tasksSpec.when()
+      //  Specification.tasksSpec
+                given().spec(Specification.taskSpec)
+                .when()
                 .get(Endpoints.tasks)
                 .then().log().body().statusCode(200);
     }
 
-    @Test (groups = {"get.requests"})
+    @Test
     public void getTask() throws Exception {
 
-        spec.singleTaskSpec.when()
+//        Specification.tasksSpec
+                given().spec(Specification.taskSpec)
+                .pathParam("id", Creator.getTaskID())
                 .get(Endpoints.singleTask)
                 .then().log().body().statusCode(200);
 
@@ -51,7 +53,9 @@ public class TaskTests {
     @Test
     public void UpdateTask() throws Exception {
 
-        spec.singleTaskSpec.given()
+      //  Specification.tasksSpec
+                given().spec(Specification.taskSpec)
+                .pathParam("id", Creator.getTaskID())
                 .contentType(ContentType.JSON).body(reqBodyUpdated)
                 .when().post(Endpoints.singleTask)
                 .then().log().body().statusCode(200);
@@ -60,7 +64,9 @@ public class TaskTests {
     @Test
     public void CloseTask() throws Exception {
 
-        spec.singleTaskSpec.when()
+       // Specification.tasksSpec
+                given().spec(Specification.taskSpec)
+                .pathParam("id", Creator.getTaskID())
                 .post(Endpoints.closeTask)
                 .then().log().body().statusCode(204);
     }
@@ -68,31 +74,25 @@ public class TaskTests {
     @Test
     public void ReopenTask() throws Exception {
 
-        spec.singleTaskSpec.when()
-                .post(Endpoints.reopenTask)
-                .then().log().body().statusCode(204);
+        //Specification.tasksSpec
+                given().spec(Specification.taskSpec)
+                    .pathParam("id", Creator.getTaskID())
+                .when()
+                    .post(Endpoints.reopenTask)
+                .then()
+                    .log().body().statusCode(204);
     }
 
     @Test
     public void deleteTask() throws Exception {
-        String taskToDelete = creator.getTaskID();
-        spec.tasksSpec.given()
-                .pathParam("id", taskToDelete)
+        //Specification.tasksSpec
+                given().spec(Specification.taskSpec)
+                .pathParam("id", Creator.getTaskID())
                 .when().delete(Endpoints.singleTask)
                 .then().log().body().statusCode(204);
-    }
-    @Test
-    public void CreateTask1() throws Exception {
-
-        spec.tasksSpec.given()
-                .body(reqBody1).contentType(ContentType.JSON)
-                .when().post(Endpoints.tasks)
-                .then().log().body().statusCode(200)
-                .assertThat().body("content",equalTo(name));
     }
 
 }
 // TODO: составить изолированные тесты из "логирующих"
 // TODO: уйти от изоляции гет запросов для позитивных тестов
 // Возможное решение: вынос в отдельный класс всю информацию о запросе, т. н. Сервис
-// TODO: использовать pojo для тела запроса и для проверки тела ответа

@@ -1,3 +1,8 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public class TaskRespBody {
     private String id;
     private String assigner_id;
@@ -8,7 +13,7 @@ public class TaskRespBody {
     private int order;
     private String content;
     private String description;
-    private boolean is_completed;
+    private String is_completed;
     private String[] labels;
     private int priority;
     private int comment_count;
@@ -20,8 +25,6 @@ public class TaskRespBody {
 
 
 }
-// TODO: Доработать конструктор тела ответа
-// TODO: применить lombok
 
 //{
 //        "id": "7291950902",

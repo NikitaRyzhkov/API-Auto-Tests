@@ -7,23 +7,21 @@ import java.io.File;
 import static io.restassured.RestAssured.given;
 
 public class Creator {
-    String taskID;
-    RequestSpecification taskSpec = given().
-                    header("Authorization", "Bearer " + Endpoints.token).
-                    baseUri(Endpoints.baseUri);
-    TaskReqBody reqBody = new TaskReqBody("Buy products","at 12:00","en",2);
+    static String taskID;
+    static TaskReqBody reqBody = new TaskReqBody("Buy products","at 12:00","en",2);
 
-    public String getTaskID() {
+    public static String getTaskID() {
 
-        Response response = taskSpec.given()
+        TaskRespBody taskRespBody =
+                given()
+                    .spec(Specification.taskSpec)
                     .body(reqBody).contentType(ContentType.JSON)
                 .when()
                     .post(Endpoints.tasks)
                 .then()
-                    .extract().response();
-        taskID = response.path("id");
+                    .extract().body().as(TaskRespBody.class);
+        taskID = taskRespBody.getId();
         return taskID;
 
     }
 }
-// TODO: применить static, например, в методах Creator, Specification
