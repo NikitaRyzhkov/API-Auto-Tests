@@ -1,16 +1,18 @@
 import io.restassured.http.ContentType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import static org.hamcrest.Matchers.containsString;
 
 public class MainPositiveTaskTests {
 
+    TaskService taskService = new TaskService();
+
 
     @Test
-    public void deleteTaskTest() throws Exception{
+    public void deleteTaskTest() throws Exception {
 
-        TaskService taskService = new TaskService();
         String activeTaskID = Creator.getTaskRespBody().getId();
 
         taskService.deleteTask(activeTaskID)
@@ -26,9 +28,8 @@ public class MainPositiveTaskTests {
     }
 
     @Test
-    public void closeAndReopenTaskTest() throws Exception {
+    public void closeTaskTest() throws Exception {
 
-        TaskService taskService = new TaskService();
         String activeTaskID = Creator.getTaskRespBody().getId();
 
         taskService.closeTask(activeTaskID)
@@ -41,21 +42,35 @@ public class MainPositiveTaskTests {
 
         Assert.assertEquals(closedTaskBody.getIs_completed(), "true");
 
-        taskService.reopenTask(activeTaskID)
+
+    }
+
+    @Test
+    public void reopenTaskTest() {
+
+        String taskID = Creator.getTaskRespBody().getId();
+
+        taskService.closeTask(taskID)
                 .then()
                 .statusCode(204);
 
-        TaskRespBody reopenedTaskBody = taskService.getTask(activeTaskID)
+
+        taskService.reopenTask(taskID)
+                .then()
+                .statusCode(204);
+
+        TaskRespBody reopenedTaskBody = taskService.getTask(taskID)
                 .then()
                 .extract().as(TaskRespBody.class);
         Assert.assertEquals(reopenedTaskBody.getIs_completed(), "false");
+
     }
 
     @Test
     public void getTaskTest() throws Exception {
+
         String activeTaskID = Creator.getTaskRespBody().getId();
         String activeTaskContent = Creator.getTaskRespBody().getContent();
-        TaskService taskService = new TaskService();
 
         TaskRespBody taskRespBody = taskService.getTask(activeTaskID)
                 .then()
@@ -67,50 +82,50 @@ public class MainPositiveTaskTests {
 
 
     }
+
     // TODO: в ответе на апдейт: labels must be array of strings? Выяснить, в чем проблема
     @Test
-    public void updateTaskTest() throws Exception{
+    public void updateTaskTest() throws Exception {
 
-        TaskService taskService = new TaskService();
         TaskReqBody initialBody = new TaskReqBody("Buy products at Walmart");
         TaskReqBody updatedBody = new TaskReqBody("Buy fruits at Kroger");
-
 
         TaskRespBody initialRespBody = taskService.createTask(initialBody)
                 .then()
                 .log().body()
                 .extract().body().as(TaskRespBody.class);
 
-        TaskRespBody updatedRespBody = taskService.updateTask(initialRespBody.getId(),updatedBody)
+
+        TaskRespBody updatedRespBody = taskService.updateTask(initialRespBody.getId(), updatedBody)
                 .then()
+                .log().body()
                 .statusCode(204)
                 .extract().body().as(TaskRespBody.class);
 
     }
+
     @Test
     public void createTaskTest() throws Exception {
-        TaskService taskService = new TaskService();
+
         TaskReqBody reqBody = new TaskReqBody("Buy yet another T-shirt");
 
         TaskRespBody respBody = taskService.createTask(reqBody)
                 .then()
-                .log().body()
                 .statusCode(200)
                 .extract().body().as(TaskRespBody.class);
-        Assert.assertEquals(respBody.getContent(),reqBody.getContent());
+        Assert.assertEquals(respBody.getContent(), reqBody.getContent());
     }
 
+    // TODO: Десериализация ответа getAllTasks
     @Test
     public void getAllTasksTest() throws Exception {
-
-        TaskService taskService = new TaskService();
 
         taskService.getAllTasks()
                 .then()
                 .statusCode(200)
-                .contentType(ContentType.JSON)
-                .log().body();
+                .contentType(ContentType.JSON);
 
     }
-    // TODO: Десериализация ответа getAllTasks
+
 }
+// TODO: вынести "throws Exception" в родительский класс

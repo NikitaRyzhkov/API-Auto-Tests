@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Основные позитивные тесты">
-    <test name="Тесты, логирующие тело и статус ответа " allow-return-values="true">
+<suite name="Тестирование Task">
+    <test name="Основные позитивные тесты" allow-return-values="true">
 
         <classes>
             <class name="MainPositiveTaskTests"></class>

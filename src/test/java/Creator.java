@@ -7,8 +7,7 @@ import java.io.File;
 import static io.restassured.RestAssured.given;
 
 public class Creator {
-    static String taskID;
-    public final static TaskReqBody reqBody = new TaskReqBody("Buy products");
+    private final static TaskReqBody reqBody = new TaskReqBody("Buy products");
 
     public static TaskRespBody getTaskRespBody() {
         TaskRespBody taskRespBody =

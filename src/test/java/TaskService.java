@@ -25,6 +25,7 @@ public class TaskService {
                 .body(taskReqBody).contentType(ContentType.JSON)
                 .when().post(Endpoints.singleTask);
     }
+
     public Response closeTask(String id) {
         return given()
                 .spec(Specification.taskSpec)
@@ -48,3 +49,5 @@ public class TaskService {
                 .get(Endpoints.tasks);
     }
 }
+
+// TODO: найти за и против объявить TaskService статическим
