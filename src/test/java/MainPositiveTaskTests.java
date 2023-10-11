@@ -1,4 +1,5 @@
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -123,9 +124,12 @@ public class MainPositiveTaskTests {
         taskService.getAllTasks()
                 .then()
                 .statusCode(200)
-                .contentType(ContentType.JSON);
+                .contentType(ContentType.JSON)
+                .extract().response().getBody().as(AllTaskBody.class);
+
 
     }
 
 }
 // TODO: вынести "throws Exception" в родительский класс
+// TODO: использовать пакеты

@@ -66,7 +66,7 @@ public class NegativeTaskTests {
     @Test
     public void getAllTasksNotValidToken() throws Exception {
 
-        String wrongToken = "688588768dbc9273d8c6cda915b2beb3fb6263b9";
+        String wrongToken = "101588768dbc9273d8c6cda915b2beb3fb6263b9";
 
         given()
                 .header("Authorization", wrongToken)
