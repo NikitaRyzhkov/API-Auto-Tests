@@ -1,8 +1,11 @@
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 
@@ -121,11 +124,14 @@ public class MainPositiveTaskTests {
     @Test
     public void getAllTasksTest() throws Exception {
 
-        taskService.getAllTasks()
+        List<AllTaskBody> allTaskBodyList =taskService.getAllTasks()
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .extract().response().getBody().as(AllTaskBody.class);
+                .extract().response().getBody().as(new TypeRef<>() {
+                });
+
+        System.out.println(allTaskBodyList.get(0));
 
 
     }
