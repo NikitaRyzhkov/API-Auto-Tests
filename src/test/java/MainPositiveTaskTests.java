@@ -1,12 +1,7 @@
-import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
-
 import java.util.List;
-
 import static org.hamcrest.Matchers.containsString;
 
 public class MainPositiveTaskTests {
@@ -120,22 +115,22 @@ public class MainPositiveTaskTests {
         Assert.assertEquals(respBody.getContent(), reqBody.getContent());
     }
 
-    // TODO: Десериализация ответа getAllTasks
     @Test
     public void getAllTasksTest() throws Exception {
 
-        List<AllTaskBody> allTaskBodyList =taskService.getAllTasks()
+        List<TaskRespBody> taskRespBodies = taskService.getAllTasks()
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .extract().response().getBody().as(new TypeRef<>() {
-                });
+                .extract().response().getBody().jsonPath().getList(".",TaskRespBody.class);
 
-        System.out.println(allTaskBodyList.get(0));
-
+        System.out.println(taskRespBodies.get(0).getId());
 
     }
 
 }
-// TODO: вынести "throws Exception" в родительский класс
-// TODO: использовать пакеты
+/*
+ TODO
+  - вынести "throws Exception" в родительский класс
+  - использовать пакеты
+*/

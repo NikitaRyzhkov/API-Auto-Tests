@@ -1,8 +1,5 @@
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
-import org.testng.annotations.BeforeClass;
-
-import static io.restassured.RestAssured.given;
 
 public class Specification {
 

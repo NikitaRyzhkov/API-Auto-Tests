@@ -1,20 +1,24 @@
 import org.testng.annotations.Test;
+import java.util.List;
 
-import static io.restassured.RestAssured.given;
 
 public class Cleaner {
 
-    String[] id = {"7298853700"};
+    TaskService taskService = new TaskService();
     @Test
-    public void deleteTask() throws Exception {
-        for(int i = 0; i< (id.length-1);i++)
-        {given().spec(Specification.taskSpec)
-                .pathParam("id", id[i])
-                .when().delete(Endpoints.singleTask)
-                .then().log().body().statusCode(204);}
+    public void deleteAllTasks() throws Exception {
+
+        List<TaskRespBody> taskRespBodies = taskService.getAllTasks()
+                .then()
+                .extract().response().getBody().jsonPath().getList(".",TaskRespBody.class);
+
+        for (TaskRespBody body : taskRespBodies) {
+            taskService.deleteTask(body.getId());
+        }
+
+        taskService.getAllTasks()
+                .then()
+                .log().body();
 
     }
-
 }
-
-// TODO: Десериализация ответа getAllTasks, в том числе и  для очистки кучи тасков

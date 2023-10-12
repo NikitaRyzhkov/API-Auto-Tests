@@ -1,7 +1,4 @@
-import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
-import org.testng.util.TimeUtils;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
