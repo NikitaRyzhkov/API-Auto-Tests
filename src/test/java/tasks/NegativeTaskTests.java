@@ -1,4 +1,8 @@
+package tasks;
+
 import org.testng.annotations.Test;
+import general.*;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -14,7 +18,7 @@ public class NegativeTaskTests {
 
         TaskReqBody taskReqBody = new TaskReqBody();
 
-        taskService.updateTask(Creator.getTaskRespBody().getId(),taskReqBody)
+        taskService.updateTask(TaskHelper.getTaskRespBody().getId(),taskReqBody)
                 .then()
                 .statusCode(400)
                 .assertThat().body(equalTo("At least one of supported fields should be set and non-empty"));

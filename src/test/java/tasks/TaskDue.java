@@ -1,3 +1,5 @@
+package tasks;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

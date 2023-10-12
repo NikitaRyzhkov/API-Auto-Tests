@@ -1,6 +1,9 @@
+package tasks;
+
 import io.restassured.http.ContentType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
 import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 
@@ -12,7 +15,7 @@ public class MainPositiveTaskTests {
     @Test
     public void deleteTaskTest() throws Exception {
 
-        String activeTaskID = Creator.getTaskRespBody().getId();
+        String activeTaskID = TaskHelper.getTaskRespBody().getId();
 
         taskService.deleteTask(activeTaskID)
                 .then()
@@ -29,7 +32,7 @@ public class MainPositiveTaskTests {
     @Test
     public void closeTaskTest() throws Exception {
 
-        String activeTaskID = Creator.getTaskRespBody().getId();
+        String activeTaskID = TaskHelper.getTaskID();
 
         taskService.closeTask(activeTaskID)
                 .then()
@@ -47,7 +50,7 @@ public class MainPositiveTaskTests {
     @Test
     public void reopenTaskTest() {
 
-        String taskID = Creator.getTaskRespBody().getId();
+        String taskID = TaskHelper.getTaskID();
 
         taskService.closeTask(taskID)
                 .then()
@@ -68,8 +71,8 @@ public class MainPositiveTaskTests {
     @Test
     public void getTaskTest() throws Exception {
 
-        String activeTaskID = Creator.getTaskRespBody().getId();
-        String activeTaskContent = Creator.getTaskRespBody().getContent();
+        String activeTaskID = TaskHelper.getTaskID();
+        String activeTaskContent = TaskHelper.getTaskContent();
 
         TaskRespBody taskRespBody = taskService.getTask(activeTaskID)
                 .then()
@@ -122,7 +125,7 @@ public class MainPositiveTaskTests {
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .extract().response().getBody().jsonPath().getList(".",TaskRespBody.class);
+                .extract().response().getBody().jsonPath().getList(".", TaskRespBody.class);
 
         System.out.println(taskRespBodies.get(0).getId());
 

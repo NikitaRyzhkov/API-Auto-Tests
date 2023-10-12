@@ -1,3 +1,6 @@
+package tasks;
+
+import general.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import static io.restassured.RestAssured.given;
@@ -17,7 +20,7 @@ public class TaskService {
                 .when()
                 .post(Endpoints.tasks);
     }
-    public Response updateTask(String id,TaskReqBody taskReqBody) {
+    public Response updateTask(String id, TaskReqBody taskReqBody) {
         return given()
                 .spec(Specification.taskSpec)
                 .pathParam("id", id)
@@ -49,4 +52,4 @@ public class TaskService {
     }
 }
 
-// TODO: найти за и против объявить TaskService статическим
+// TODO: найти за и против объявить tasks.TaskService статическим
