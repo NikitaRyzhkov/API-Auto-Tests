@@ -35,21 +35,23 @@ public class TaskService {
                 .post(Endpoints.closeTask);
     }
     public Response reopenTask(String id) {
-        return given().spec(Specification.taskSpec)
+        return given()
+                .spec(Specification.taskSpec)
                 .pathParam("id", id)
                 .when()
                 .post(Endpoints.reopenTask);
     }
     public Response getTask(String id) {
-        return given().spec(Specification.taskSpec)
+        return given()
+                .spec(Specification.taskSpec)
                 .pathParam("id", id)
                 .get(Endpoints.singleTask);
     }
     public Response getAllTasks(){
-        return given().spec(Specification.taskSpec)
+        return given()
+                .spec(Specification.taskSpec)
                 .when()
                 .get(Endpoints.tasks);
     }
 }
 
-// TODO: найти за и против объявить tasks.TaskService статическим

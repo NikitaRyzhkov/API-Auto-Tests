@@ -3,6 +3,7 @@ package tasks;
 import io.restassured.http.ContentType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import java.util.List;
 import static org.hamcrest.Matchers.containsString;
@@ -68,20 +69,20 @@ public class MainPositiveTaskTests {
 
     }
 
+
     @Test
     public void getTaskTest() throws Exception {
 
-        String activeTaskID = TaskHelper.getTaskID();
-        String activeTaskContent = TaskHelper.getTaskContent();
+        TaskRespBody taskRespBodyAfterCreation = TaskHelper.getTaskRespBody();
 
-        TaskRespBody taskRespBody = taskService.getTask(activeTaskID)
+        TaskRespBody taskRespBodyAfterGet = taskService.getTask(taskRespBodyAfterCreation.getId())
                 .then()
                 .statusCode(200)
                 .extract().body().as(TaskRespBody.class);
 
-        Assert.assertEquals(taskRespBody.getContent(), activeTaskContent);
-        Assert.assertEquals(taskRespBody.getId(), activeTaskID);
-
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(taskRespBodyAfterGet.toString(),taskRespBodyAfterCreation.toString());
+        softAssert.assertAll();
 
     }
 
@@ -94,13 +95,12 @@ public class MainPositiveTaskTests {
 
         TaskRespBody initialRespBody = taskService.createTask(initialBody)
                 .then()
-                .log().body()
                 .extract().body().as(TaskRespBody.class);
 
 
         TaskRespBody updatedRespBody = taskService.updateTask(initialRespBody.getId(), updatedBody)
                 .then()
-                .log().body()
+                .log().all()
                 .statusCode(204)
                 .extract().body().as(TaskRespBody.class);
 
@@ -127,7 +127,7 @@ public class MainPositiveTaskTests {
                 .contentType(ContentType.JSON)
                 .extract().response().getBody().jsonPath().getList(".", TaskRespBody.class);
 
-        System.out.println(taskRespBodies.get(0).getId());
+        System.out.println(taskRespBodies.size());
 
     }
 
