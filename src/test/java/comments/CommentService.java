@@ -50,6 +50,6 @@ public class CommentService {
 
 
 }
-/* TODO: асбтрактный класс
+/* TODO: абстрактный класс
 
  */

@@ -1,9 +1,14 @@
 package comments;
 
+import io.restassured.http.ContentType;
 import org.checkerframework.checker.units.qual.C;
+import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 import tasks.TaskHelper;
 import org.testng.annotations.Test;
 import tasks.TaskRespBody;
+
+import java.util.List;
 
 public class MainCommentPositiveTests {
 
@@ -12,44 +17,85 @@ public class MainCommentPositiveTests {
     @Test
     public void createCommentTest() {
 
-        CommentReqBody reqBody = new CommentReqBody(TaskHelper.getTaskID(),"Comment 1");
-        commentService.createComment(reqBody)
+        CommentReqBody reqBody = new CommentReqBody(TaskHelper.getTaskID(), "Comment 1");
+        CommentRespBody respBody = commentService.createComment(reqBody)
                 .then()
-                .log().body();
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .extract().body().as(CommentRespBody.class);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(respBody.getContent(), reqBody.getContent());
+        softAssert.assertEquals(reqBody.getTask_id(), reqBody.getTask_id());
+        softAssert.assertAll();
 
     }
 
     @Test
     public void getCommentTest() {
 
-        commentService.getComment(CommentHelper.getCommentID())
+        CommentRespBody bodyAfterCreation = CommentHelper.getCommentRespBody();
+
+        CommentRespBody bodyAfterGet = commentService.getComment(bodyAfterCreation.getId())
                 .then()
-                .log()
-                .all();
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .extract().body().as(CommentRespBody.class);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(bodyAfterGet.toString(), bodyAfterCreation.toString());
+        softAssert.assertAll();
+
     }
+
+    // при запросе гет удаленного комментария, приходит его тело и код 200 (возможно это баг)
     @Test
     public void deleteCommentTest() {
 
         commentService.deleteComment(CommentHelper.getCommentID())
                 .then()
-                .log()
-                .all();
+                .statusCode(204);
+
     }
 
     @Test
-    public void updateCommentTest(){
+    public void updateCommentTest() {
 
-        CommentReqBody updatedReqBody = new CommentReqBody(TaskHelper.getTaskRespBody().getId(),"Updated comment");
+        CommentRespBody respBody = CommentHelper.getCommentRespBody();
+        CommentReqBody updatedReqBody = new CommentReqBody(respBody.getId(), "Updated comment");
 
-        commentService.updateComment(CommentHelper.getCommentID(),updatedReqBody)
+        CommentRespBody updatedBody = commentService.updateComment(CommentHelper.getCommentID(), updatedReqBody)
                 .then()
-                .log().all();
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .extract().body().as(CommentRespBody.class);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(updatedBody.getId(), respBody.getId());
+        softAssert.assertNotEquals(updatedBody.getContent(), respBody.getContent());
+        softAssert.assertAll();
+
 
     }
+
+    // Цикл работает при запуске отдельного теста. При запуске класса - нет.
+    // TODO отладить
     @Test
     public void getAllCommentsTest() {
-        commentService.getAllComments(CommentHelper.getCommentTaskID())
-                .then().log().all();
+
+        CommentRespBody respBody = CommentHelper.getCommentRespBody();
+
+        List<CommentRespBody> respBodies = commentService.getAllComments(respBody.getTask_id())
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .extract().body().jsonPath().getList(".", CommentRespBody.class);
+
+        SoftAssert softAssert = new SoftAssert();
+        for (CommentRespBody body : respBodies) {
+            softAssert.assertEquals(body.getId(), respBody.getId());
+            softAssert.assertAll();
+        }
     }
 
 }
