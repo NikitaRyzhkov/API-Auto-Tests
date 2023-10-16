@@ -1,6 +1,7 @@
 package tasks;
 
 import helpers.TaskHelper;
+import io.qameta.allure.Description;
 import models.TaskReqBody;
 import org.testng.annotations.Test;
 import services.Endpoints;
@@ -15,7 +16,8 @@ public class NegativeTaskTests {
     TaskService taskService = new TaskService();
 
     // TODO: в ответе на апдейт: labels must be array of strings? Выяснить, в чем проблема
-    //Пустое тело запроса
+
+    @Description("Пустое тело запроса")
     @Test
     public void UpdateTaskWithoutBody() throws Exception {
 
@@ -28,7 +30,7 @@ public class NegativeTaskTests {
 
     }
 
-    //Пустое тело запроса
+    @Description("Пустое тело запроса")
     @Test
     public void CreateTaskWithoutBody() throws Exception {
 
@@ -39,7 +41,7 @@ public class NegativeTaskTests {
                 .assertThat().body(equalTo("Required argument is missing"));
     }
 
-    // Невалидный id
+    @Description("Невалидный id")
     @Test
     public void getTaskNotValidID() throws Exception {
 
@@ -52,7 +54,7 @@ public class NegativeTaskTests {
 
     }
 
-    // Пустой токен
+    @Description("Пустой токен")
     @Test
     public void getAllTasksEmptyToken() throws Exception {
 
@@ -66,7 +68,7 @@ public class NegativeTaskTests {
 
     }
 
-    // Невалидный токен
+    @Description("Невалидный токен")
     @Test
     public void getAllTasksNotValidToken() throws Exception {
 
@@ -81,7 +83,7 @@ public class NegativeTaskTests {
                 .assertThat().body(containsString("Sorry, you are forbidden to access this"));
     }
 
-    // Тело запроса с незаполненным полем "name"
+    @Description("Тело запроса с незаполненным полем name")
     @Test
     public void createUnnamedTask() throws Exception {
 
