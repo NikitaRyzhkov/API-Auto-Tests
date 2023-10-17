@@ -28,9 +28,20 @@ public class TaskReqBody {
 
     public TaskReqBody(String content){
         this.content = content;
-
+    }
+    // для набора "Позитивные тесты + дополнительные данные"
+    public TaskReqBody(String content, String description){
+        this.content = content;
+        this.description = description;
+    }
+    public TaskReqBody(String content, String ... labels) {
+        this.content = content;
+        this.labels = labels;
+    }
+    public TaskReqBody(String content, int priority, String ... labels){
+        this.content = content;
+        this.priority = priority;
+        this.labels = labels;
     }
 
 }
-
-// TODO: разобраться, почему запрос не проходит, если duration объявляется как int
